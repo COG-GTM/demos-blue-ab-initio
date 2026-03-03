@@ -1,0 +1,52 @@
+# Ab Initio build artifacts
+*.o
+*.class
+*.dat
+*.out
+*.err
+*.log
+
+# Sandbox directories
+sandbox/
+run/
+work/
+checkpoint/
+serial/
+
+# Ab Initio compiled graphs
+*.mp.comp
+*.plan
+
+# Parameter set overrides (local)
+pset/**/local_*.pset
+pset/**/*.pset.local
+
+# Data files
+data/
+extract/
+archive/
+
+# Temporary files
+tmp/
+temp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Credentials
+conf/*/credentials.cfg
+conf/*/.ab_password
+*.keystore
+*.jks
+
+# Logs
+logs/
+*.log.*

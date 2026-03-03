@@ -1,0 +1,58 @@
+#=============================================================================
+# Parameter Set: gmrd_daily.pset (DEV)
+# JIRA: GMRD-212
+# Author: GMRD Data Engineering
+# Description: DEV environment parameter set for the daily EOD batch.
+#              Defines all runtime parameters for extract, transform, and
+#              load graphs.
+#=============================================================================
+
+# --- Environment ---
+ENV=dev
+AB_SANDBOX=/data/gmrd/dev
+
+# --- Teradata connectivity ---
+TD_JDBC_URL=jdbc:teradata://TDDEV01/DATABASE=GMRD_CORE_DB,DBS_PORT=1025,CHARSET=UTF8,TMODE=ANSI
+TD_USER=${AB_TD_DEV_USER}
+TD_PASSWORD=${AB_TD_DEV_PASSWORD}
+
+# --- Calypso Oracle connectivity ---
+CALYPSO_JDBC_URL=jdbc:oracle:thin:@calypso-dev.internal:1521/CALDEV
+CALYPSO_USER=${AB_CALYPSO_DEV_USER}
+CALYPSO_PASSWORD=${AB_CALYPSO_DEV_PASSWORD}
+
+# --- Murex Sybase connectivity ---
+MUREX_JDBC_URL=jdbc:sybase:Tds:murex-dev.internal:5000/MXDM
+MUREX_USER=${AB_MUREX_DEV_USER}
+MUREX_PASSWORD=${AB_MUREX_DEV_PASSWORD}
+
+# --- Summit Oracle connectivity ---
+SUMMIT_JDBC_URL=jdbc:oracle:thin:@summit-dev.internal:1521/SMTDEV
+SUMMIT_USER=${AB_SUMMIT_DEV_USER}
+SUMMIT_PASSWORD=${AB_SUMMIT_DEV_PASSWORD}
+
+# --- Market data feeds ---
+BBG_FEED_DIR=/data/feeds/bloomberg/dev
+RTR_FEED_DIR=/data/feeds/reuters/dev
+
+# --- Directories ---
+OUTPUT_DIR=${AB_SANDBOX}/data/extract
+EXTRACT_DIR=${AB_SANDBOX}/data/extract
+INPUT_DIR=${AB_SANDBOX}/data/extract
+LOOKUP_DIR=${AB_SANDBOX}/data/extract
+REJECT_DIR=${AB_SANDBOX}/data/reject
+ARCHIVE_DIR=${AB_SANDBOX}/data/archive
+HIERARCHY_FILE=${AB_SANDBOX}/data/reference/corporate_hierarchy.dat
+
+# --- Processing ---
+MAX_PARALLELISM=2
+MAX_SESSIONS=4
+FETCH_SIZE=5000
+BATCH_SIZE=10000
+STALE_PRICE_THRESHOLD_DAYS=3
+STALE_THRESHOLD_PCT=0.001
+OUTLIER_THRESHOLD_PCT=0.20
+
+# --- Logging ---
+LOG_DIR=${AB_SANDBOX}/logs
+LOG_LEVEL=DEBUG

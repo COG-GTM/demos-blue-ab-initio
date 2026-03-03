@@ -1,0 +1,149 @@
+trigger:
+  branches:
+    include:
+      - develop
+      - release/*
+      - main
+  paths:
+    include:
+      - mp/*
+      - dml/*
+      - xfr/*
+      - sql/*
+
+pr:
+  branches:
+    include:
+      - develop
+      - main
+
+pool:
+  name: 'GMRD-Linux-Pool'
+
+variables:
+  - group: gmrd-abinitio-common
+  - name: AB_HOME
+    value: '/opt/abinitio/V3.6'
+  - name: GDE_HOME
+    value: '/opt/abinitio/GDE4.2'
+
+stages:
+  - stage: Validate
+    displayName: 'Graph Validation'
+    jobs:
+      - job: ValidateGraphs
+        displayName: 'Validate Ab Initio Graphs'
+        steps:
+          - script: |
+              export AB_HOME=${AB_HOME}
+              export PATH=${AB_HOME}/bin:${GDE_HOME}/bin:${PATH}
+              source ${AB_HOME}/abinitio.setup
+
+              # Validate DML syntax
+              echo "=== Validating DML files ==="
+              for dml_file in dml/*.dml; do
+                echo "Checking: ${dml_file}"
+                m_dml -verify "${dml_file}"
+              done
+            displayName: 'Validate DML definitions'
+
+          - script: |
+              export AB_HOME=${AB_HOME}
+              export PATH=${AB_HOME}/bin:${GDE_HOME}/bin:${PATH}
+              source ${AB_HOME}/abinitio.setup
+
+              # Compile graphs
+              echo "=== Compiling graphs ==="
+              for mp_file in mp/**/*.mp; do
+                echo "Compiling: ${mp_file}"
+                air sandbox parameter -basedir pset/dev "${mp_file}"
+              done
+            displayName: 'Compile graphs (DEV pset)'
+
+          - script: |
+              # Validate SQL files
+              pip install sqlfluff==2.3.5
+              sqlfluff lint sql/ --dialect teradata
+            displayName: 'Lint SQL scripts'
+
+  - stage: DeployDEV
+    displayName: 'Deploy to DEV'
+    dependsOn: Validate
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    jobs:
+      - deployment: DeployDev
+        displayName: 'Deploy graphs to DEV sandbox'
+        environment: 'GMRD-AbInitio-DEV'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    export AB_HOME=${AB_HOME}
+                    source ${AB_HOME}/abinitio.setup
+                    make deploy ENV=dev
+                  displayName: 'Deploy to DEV sandbox'
+                  env:
+                    AB_DEV_PASSWORD: $(GMRD_AB_DEV_PASSWORD)
+
+  - stage: DeploySIT
+    displayName: 'Deploy to SIT'
+    dependsOn: Validate
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
+    jobs:
+      - deployment: DeploySit
+        displayName: 'Deploy graphs to SIT sandbox'
+        environment: 'GMRD-AbInitio-SIT'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    export AB_HOME=${AB_HOME}
+                    source ${AB_HOME}/abinitio.setup
+                    make deploy ENV=sit
+                  displayName: 'Deploy to SIT sandbox'
+
+  - stage: DeployUAT
+    displayName: 'Deploy to UAT'
+    dependsOn: DeploySIT
+    condition: succeeded()
+    jobs:
+      - deployment: DeployUat
+        displayName: 'Deploy graphs to UAT sandbox'
+        environment: 'GMRD-AbInitio-UAT'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    export AB_HOME=${AB_HOME}
+                    source ${AB_HOME}/abinitio.setup
+                    make deploy ENV=uat
+                  displayName: 'Deploy to UAT sandbox'
+
+  - stage: DeployPROD
+    displayName: 'Deploy to PROD'
+    dependsOn: DeployUAT
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployProd
+        displayName: 'Deploy graphs to PROD sandbox'
+        environment: 'GMRD-AbInitio-PROD'
+        strategy:
+          runOnce:
+            preDeploy:
+              steps:
+                - script: |
+                    echo "Awaiting CAB approval for PROD deployment"
+                    echo "Change Reference: $(Build.BuildNumber)"
+                  displayName: 'CAB Approval Gate'
+            deploy:
+              steps:
+                - script: |
+                    export AB_HOME=${AB_HOME}
+                    source ${AB_HOME}/abinitio.setup
+                    make deploy ENV=prod
+                  displayName: 'Deploy to PROD sandbox'
+                  env:
+                    AB_PROD_PASSWORD: $(GMRD_AB_PROD_PASSWORD)

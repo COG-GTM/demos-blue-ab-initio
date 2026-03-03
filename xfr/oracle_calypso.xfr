@@ -1,0 +1,45 @@
+/*============================================================================
+  Transfer File: oracle_calypso.xfr
+  JIRA: GMRD-218
+  Author: GMRD Data Engineering
+  Description: Ab Initio database transfer definition for Calypso Oracle 19c
+               database. Used by extraction graphs to read trade, position,
+               and counterparty data from the Calypso trading system.
+============================================================================*/
+
+database "oracle_calypso" =
+begin
+    database_type = "oracle";
+    driver_class = "oracle.jdbc.OracleDriver";
+    connection_url = "${CALYPSO_JDBC_URL}";
+    username = "${CALYPSO_USER}";
+    password = "${CALYPSO_PASSWORD}";
+
+    /* Connection pooling */
+    min_connections = 1;
+    max_connections = 8;
+    connection_timeout = 120;
+    idle_timeout = 300;
+
+    /* Session parameters */
+    session_parameters =
+    begin
+        "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD'";
+        "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF6'";
+        "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = '.,'";
+        "ALTER SESSION SET CURRENT_SCHEMA = CALYPSO_OWNER";
+    end;
+
+    /* Read settings */
+    fetch_size = 10000;
+    max_parallelism = 4;
+
+    /* Retry configuration */
+    retry_count = 3;
+    retry_interval = 15;
+    retry_on_errors = "ORA-03113,ORA-03114,ORA-12541";
+
+    /* Oracle-specific options */
+    prefetch_rows = 10000;
+    batch_size = 5000;
+end;

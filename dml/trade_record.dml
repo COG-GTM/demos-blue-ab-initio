@@ -1,0 +1,150 @@
+/*============================================================================
+  DML: trade_record.dml
+  JIRA: GMRD-217
+  Author: GMRD Data Engineering
+  Description: Core trade record type used across all extract, transform,
+               and load graphs. Maps to the conformed trade model in
+               GMRD_CORE_DB.TRD_TRADES.
+============================================================================*/
+
+type trade_record_t =
+record
+    string(",") trade_id;
+    string(",") trade_version;
+    string(",") source_system;          /* CALYPSO, MUREX, SUMMIT */
+    string(",") source_trade_ref;
+    string(",") business_date;          /* YYYY-MM-DD */
+    string(",") trade_status;           /* ACTIVE, AMENDED, CANCELLED, MATURED */
+    string(",") trade_type;
+    string(",") product_type;
+    string(",") product_subtype;
+    string(",") asset_class;            /* IR, FX, EQ, CR, CO */
+    string(",") book_id;
+    string(",") desk_id;
+    string(",") entity_code;
+    string(",") trader_id;
+    string(",") counterparty_id;
+    string(",") counterparty_name;
+    string(",") trade_date;             /* YYYY-MM-DD */
+    string(",") settlement_date;        /* YYYY-MM-DD */
+    string(",") maturity_date;          /* YYYY-MM-DD */
+    string(",") effective_date;         /* YYYY-MM-DD */
+    decimal(",") notional_amount;
+    string(",") notional_ccy;           /* ISO 4217 */
+    decimal(",") notional_amount_gbp;
+    decimal(",") settlement_amount;
+    string(",") settlement_ccy;
+    decimal(",") trade_price;
+    decimal(",") market_value;
+    string(",") market_value_ccy;
+    decimal(",") market_value_gbp;
+    string(",") underlying_asset_id;
+    string(",") underlying_asset_name;
+    decimal(",") strike_price;
+    string(",") option_type;            /* CALL, PUT */
+    string(",") buy_sell_ind;           /* B, S */
+    string(",") long_short_ind;         /* L, S */
+    string(",") is_internal;            /* 0, 1 */
+    string(",") netting_set_id;
+    string(",") hedge_flag;             /* 0, 1 */
+    string(",") hedge_designation;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;
+
+type trade_calypso_raw_t =
+record
+    string(",") feed_id;
+    string(",") feed_timestamp;
+    string(",") trade_ref;
+    string(",") trade_version;
+    string(",") trade_status;
+    string(",") trade_type;
+    string(",") product_type;
+    string(",") product_subtype;
+    string(",") book_id;
+    string(",") desk_id;
+    string(",") trader_id;
+    string(",") counterparty_id;
+    string(",") counterparty_name;
+    string(",") trade_date;
+    string(",") settlement_date;
+    string(",") maturity_date;
+    string(",") notional_amount;
+    string(",") notional_ccy;
+    string(",") settlement_amount;
+    string(",") settlement_ccy;
+    string(",") trade_price;
+    string(",") market_value;
+    string(",") market_value_ccy;
+    string(",") underlying_asset;
+    string(",") strike_price;
+    string(",") option_type;
+    string(",") buy_sell_ind;
+    string(",") long_short_ind;
+    string("\n") raw_payload;
+end;
+
+type trade_murex_raw_t =
+record
+    string(",") feed_id;
+    string(",") feed_timestamp;
+    string(",") mx_trade_id;
+    string(",") mx_version;
+    string(",") mx_status;
+    string(",") mx_trade_type;
+    string(",") mx_product_family;
+    string(",") mx_product_type;
+    string(",") mx_portfolio;
+    string(",") mx_book;
+    string(",") mx_desk;
+    string(",") mx_trader;
+    string(",") mx_cpty_code;
+    string(",") mx_cpty_long_name;
+    string(",") mx_trade_date;
+    string(",") mx_value_date;
+    string(",") mx_maturity_date;
+    string(",") mx_nominal;
+    string(",") mx_nominal_ccy;
+    string(",") mx_settle_amount;
+    string(",") mx_settle_ccy;
+    string(",") mx_price;
+    string(",") mx_mkt_value;
+    string(",") mx_mkt_value_ccy;
+    string(",") mx_underlying;
+    string(",") mx_strike;
+    string(",") mx_buy_sell;
+    string("\n") raw_payload;
+end;
+
+type trade_summit_raw_t =
+record
+    string(",") feed_id;
+    string(",") feed_timestamp;
+    string(",") smt_deal_no;
+    string(",") smt_version_no;
+    string(",") smt_deal_status;
+    string(",") smt_deal_type;
+    string(",") smt_product_class;
+    string(",") smt_product_group;
+    string(",") smt_folder;
+    string(",") smt_book;
+    string(",") smt_desk;
+    string(",") smt_entity;
+    string(",") smt_cpty_id;
+    string(",") smt_cpty_name;
+    string(",") smt_trade_date;
+    string(",") smt_settle_date;
+    string(",") smt_maturity_date;
+    string(",") smt_notional;
+    string(",") smt_notional_ccy;
+    string(",") smt_principal;
+    string(",") smt_principal_ccy;
+    string(",") smt_rate;
+    string(",") smt_mkt_value;
+    string(",") smt_mkt_value_ccy;
+    string(",") smt_underlying_id;
+    string(",") smt_strike_rate;
+    string(",") smt_direction;
+    string("\n") raw_payload;
+end;

@@ -1,0 +1,91 @@
+/*============================================================================
+  DML: position_record.dml
+  JIRA: GMRD-249
+  Author: GMRD Data Engineering
+  Description: Position record types for daily position snapshots. Used by
+               extract, aggregation, and load graphs. Maps to
+               GMRD_CORE_DB.POS_DAILY_POSITIONS.
+============================================================================*/
+
+type position_raw_t =
+record
+    string(",") feed_id;
+    string(",") feed_timestamp;
+    string(",") position_id;
+    string(",") source_system;
+    string(",") business_date;
+    string(",") book_id;
+    string(",") desk_id;
+    string(",") entity_code;
+    string(",") product_type;
+    string(",") instrument_id;
+    string(",") instrument_name;
+    string(",") instrument_ccy;
+    decimal(",") quantity;
+    decimal(",") market_value_local;
+    decimal(",") market_value_base;
+    string(",") base_ccy;
+    decimal(",") accrued_interest;
+    decimal(",") unrealised_pnl;
+    decimal(",") delta;
+    decimal(",") gamma;
+    decimal(",") vega;
+    decimal(",") theta;
+    decimal("\n") rho;
+end;
+
+type position_enriched_t =
+record
+    string(",") position_id;
+    string(",") business_date;
+    string(",") source_system;
+    string(",") book_id;
+    string(",") desk_id;
+    string(",") entity_code;
+    string(",") asset_class;
+    string(",") product_type;
+    string(",") instrument_id;
+    string(",") instrument_name;
+    string(",") instrument_ccy;
+    decimal(",") quantity;
+    decimal(",") market_value_local;
+    decimal(",") market_value_gbp;
+    decimal(",") cost_value_local;
+    decimal(",") cost_value_gbp;
+    decimal(",") accrued_interest;
+    decimal(",") unrealised_pnl_local;
+    decimal(",") unrealised_pnl_gbp;
+    decimal(",") realised_pnl_local;
+    decimal(",") realised_pnl_gbp;
+    decimal(",") weighted_avg_price;
+    decimal(",") current_price;
+    decimal(",") fx_rate_to_gbp;
+    decimal(",") delta;
+    decimal(",") gamma;
+    decimal(",") vega;
+    decimal(",") theta;
+    decimal(",") rho;
+    decimal(",") dv01;
+    decimal(",") cs01;
+    string(",") trade_count;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;
+
+type position_aggregated_t =
+record
+    string(",") book_id;
+    string(",") desk_id;
+    string(",") entity_code;
+    string(",") asset_class;
+    string(",") business_date;
+    decimal(",") total_market_value_gbp;
+    decimal(",") total_unrealised_pnl_gbp;
+    decimal(",") total_delta;
+    decimal(",") total_gamma;
+    decimal(",") total_vega;
+    decimal(",") total_dv01;
+    string(",") position_count;
+    string(",") instrument_count;
+    string("\n") batch_id;
+end;

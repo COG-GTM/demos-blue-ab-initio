@@ -1,0 +1,56 @@
+/*============================================================================
+  Transfer File: teradata_gmrd.xfr
+  JIRA: GMRD-211
+  Author: GMRD Data Engineering
+  Description: Ab Initio database transfer definition for Teradata GMRD
+               databases. Defines JDBC connection properties, session
+               parameters, and load/unload settings.
+============================================================================*/
+
+database "teradata_gmrd" =
+begin
+    database_type = "teradata";
+    driver_class = "com.teradata.jdbc.TeraDriver";
+    connection_url = "${TD_JDBC_URL}";
+    username = "${TD_USER}";
+    password = "${TD_PASSWORD}";
+
+    /* Connection pooling */
+    min_connections = 2;
+    max_connections = 32;
+    connection_timeout = 300;
+    idle_timeout = 600;
+
+    /* Session parameters */
+    session_parameters =
+    begin
+        "SET SESSION DATEFORM = ANSIDATE";
+        "SET SESSION CHARSET UTF8";
+        "SET SESSION DATABASE GMRD_CORE_DB";
+    end;
+
+    /* Load settings */
+    load_method = "stream";
+    max_sessions = 16;
+    min_sessions = 4;
+    buffer_size = 1048576;
+    tenacity_hours = 4;
+    tenacity_sleep = 60;
+    error_limit = 100;
+    checkpoint_interval = 100000;
+
+    /* Unload settings */
+    unload_method = "export";
+    spool_mode = "nospool";
+    fetch_size = 10000;
+
+    /* Retry configuration */
+    retry_count = 3;
+    retry_interval = 30;
+    retry_on_errors = "2631,2633,3524,3803";
+
+    /* Teradata-specific options */
+    date_form = "ANSIDATE";
+    charset = "UTF8";
+    log_mechanism = "TD2";
+end;
