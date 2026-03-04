@@ -1,0 +1,47 @@
+#=============================================================================
+# Parameter Set: gmrd_daily.pset (PROD)
+# JIRA: GMRD-212
+# Description: PROD environment parameter set for the daily EOD batch.
+#              Production uses maximum parallelism and session counts.
+#=============================================================================
+
+ENV=prod
+AB_SANDBOX=/data/gmrd/prod
+
+TD_JDBC_URL=jdbc:teradata://TDPRD01/DATABASE=GMRD_CORE_DB,DBS_PORT=1025,CHARSET=UTF8,TMODE=ANSI
+TD_USER=${AB_TD_PROD_USER}
+TD_PASSWORD=${AB_TD_PROD_PASSWORD}
+
+CALYPSO_JDBC_URL=jdbc:oracle:thin:@calypso-prod.internal:1521/CALPRD
+CALYPSO_USER=${AB_CALYPSO_PROD_USER}
+CALYPSO_PASSWORD=${AB_CALYPSO_PROD_PASSWORD}
+
+MUREX_JDBC_URL=jdbc:sybase:Tds:murex-prod.internal:5000/MXDM
+MUREX_USER=${AB_MUREX_PROD_USER}
+MUREX_PASSWORD=${AB_MUREX_PROD_PASSWORD}
+
+SUMMIT_JDBC_URL=jdbc:oracle:thin:@summit-prod.internal:1521/SMTPRD
+SUMMIT_USER=${AB_SUMMIT_PROD_USER}
+SUMMIT_PASSWORD=${AB_SUMMIT_PROD_PASSWORD}
+
+BBG_FEED_DIR=/data/feeds/bloomberg/prod
+RTR_FEED_DIR=/data/feeds/reuters/prod
+
+OUTPUT_DIR=${AB_SANDBOX}/data/extract
+EXTRACT_DIR=${AB_SANDBOX}/data/extract
+INPUT_DIR=${AB_SANDBOX}/data/extract
+LOOKUP_DIR=${AB_SANDBOX}/data/extract
+REJECT_DIR=${AB_SANDBOX}/data/reject
+ARCHIVE_DIR=${AB_SANDBOX}/data/archive
+HIERARCHY_FILE=${AB_SANDBOX}/data/reference/corporate_hierarchy.dat
+
+MAX_PARALLELISM=8
+MAX_SESSIONS=16
+FETCH_SIZE=10000
+BATCH_SIZE=50000
+STALE_PRICE_THRESHOLD_DAYS=3
+STALE_THRESHOLD_PCT=0.001
+OUTLIER_THRESHOLD_PCT=0.20
+
+LOG_DIR=${AB_SANDBOX}/logs
+LOG_LEVEL=WARN

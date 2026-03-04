@@ -1,0 +1,122 @@
+/*============================================================================
+  DML: market_data_record.dml
+  JIRA: GMRD-276
+  Author: GMRD Data Engineering
+  Description: Market data record types for EOD prices, yield curves,
+               FX rates, volatility surfaces, and credit spreads.
+               Maps to GMRD_CORE_DB.MKT_* tables.
+============================================================================*/
+
+type market_data_raw_t =
+record
+    string(",") feed_id;
+    string(",") feed_timestamp;
+    string(",") market_data_id;
+    string(",") business_date;
+    string(",") data_source;
+    string(",") instrument_type;
+    string(",") instrument_id;
+    string(",") instrument_name;
+    string(",") ccy_code;
+    decimal(",") mid_price;
+    decimal(",") bid_price;
+    decimal(",") ask_price;
+    decimal(",") close_price;
+    decimal(",") volume;
+    decimal(",") yield_value;
+    decimal(",") volatility;
+    string(",") tenor;
+    string("\n") curve_name;
+end;
+
+type eod_price_t =
+record
+    string(",") instrument_id;
+    string(",") instrument_name;
+    string(",") instrument_type;
+    string(",") business_date;
+    string(",") data_source;
+    string(",") ccy_code;
+    decimal(",") mid_price;
+    decimal(",") bid_price;
+    decimal(",") ask_price;
+    decimal(",") open_price;
+    decimal(",") high_price;
+    decimal(",") low_price;
+    decimal(",") close_price;
+    decimal(",") volume;
+    decimal(",") settlement_price;
+    string(",") price_status;
+    string(",") stale_flag;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;
+
+type yield_curve_t =
+record
+    string(",") curve_name;
+    string(",") curve_type;
+    string(",") ccy_code;
+    string(",") business_date;
+    string(",") tenor;
+    string(",") tenor_days;
+    decimal(",") rate;
+    decimal(",") discount_factor;
+    string(",") data_source;
+    string(",") interpolation_method;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;
+
+type fx_rate_t =
+record
+    string(",") ccy_pair;
+    string(",") base_ccy;
+    string(",") quote_ccy;
+    string(",") business_date;
+    decimal(",") spot_rate;
+    decimal(",") spot_bid;
+    decimal(",") spot_ask;
+    decimal(",") fwd_1m;
+    decimal(",") fwd_3m;
+    decimal(",") fwd_6m;
+    decimal(",") fwd_1y;
+    string(",") data_source;
+    string(",") fixing_type;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;
+
+type vol_surface_t =
+record
+    string(",") surface_name;
+    string(",") underlying_id;
+    string(",") business_date;
+    string(",") expiry_tenor;
+    string(",") expiry_days;
+    string(",") strike_type;
+    decimal(",") strike_value;
+    decimal(",") implied_vol;
+    string(",") data_source;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;
+
+type credit_spread_t =
+record
+    string(",") entity_ref;
+    string(",") entity_type;
+    string(",") seniority;
+    string(",") restructuring_type;
+    string(",") ccy_code;
+    string(",") business_date;
+    string(",") tenor;
+    string(",") tenor_days;
+    decimal(",") spread_bps;
+    decimal(",") hazard_rate;
+    decimal(",") survival_prob;
+    decimal(",") recovery_rate;
+    string(",") data_source;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;

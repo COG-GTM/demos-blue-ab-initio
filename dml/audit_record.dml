@@ -1,0 +1,84 @@
+/*============================================================================
+  DML: audit_record.dml
+  JIRA: GMRD-373
+  Author: GMRD Data Engineering
+  Description: Audit and control record types used by batch orchestration
+               and data quality graphs. Maps to GMRD_CORE_DB.AUD_* tables.
+============================================================================*/
+
+type batch_control_t =
+record
+    string(",") batch_id;
+    string(",") batch_name;
+    string(",") batch_type;
+    string(",") source_system;
+    string(",") business_date;
+    string(",") start_ts;
+    string(",") end_ts;
+    string(",") status;
+    string(",") rows_processed;
+    string(",") rows_rejected;
+    string(",") error_message;
+    string(",") created_by;
+    string("\n") created_ts;
+end;
+
+type data_quality_log_t =
+record
+    string(",") batch_id;
+    string(",") check_name;
+    string(",") check_type;
+    string(",") target_table;
+    string(",") target_database;
+    string(",") business_date;
+    string(",") expected_count;
+    string(",") actual_count;
+    decimal(",") threshold_pct;
+    decimal(",") variance_pct;
+    string(",") status;
+    string(",") detail_message;
+    string("\n") created_ts;
+end;
+
+type data_lineage_t =
+record
+    string(",") batch_id;
+    string(",") source_table;
+    string(",") source_database;
+    string(",") target_table;
+    string(",") target_database;
+    string(",") transformation_name;
+    string(",") etl_graph_name;
+    string(",") business_date;
+    string(",") source_row_count;
+    string(",") target_row_count;
+    string(",") rejected_row_count;
+    string(",") insert_count;
+    string(",") update_count;
+    string(",") delete_count;
+    string(",") duration_seconds;
+    string(",") status;
+    string(",") error_details;
+    string("\n") created_ts;
+end;
+
+type reconciliation_t =
+record
+    string(",") recon_name;
+    string(",") recon_type;
+    string(",") business_date;
+    string(",") source_system;
+    string(",") target_system;
+    string(",") source_table;
+    string(",") target_table;
+    string(",") metric_name;
+    decimal(",") source_value;
+    decimal(",") target_value;
+    decimal(",") difference;
+    decimal(",") tolerance_abs;
+    decimal(",") tolerance_pct;
+    string(",") status;
+    string(",") break_category;
+    string(",") batch_id;
+    string("\n") created_ts;
+end;

@@ -1,0 +1,43 @@
+/*============================================================================
+  Transfer File: sybase_murex.xfr
+  JIRA: GMRD-219
+  Author: GMRD Data Engineering
+  Description: Ab Initio database transfer definition for Murex MX.3 Sybase
+               ASE datamart. Used by extraction graphs to read trade data
+               from the Murex trading system.
+============================================================================*/
+
+database "sybase_murex" =
+begin
+    database_type = "sybase";
+    driver_class = "com.sybase.jdbc4.jdbc.SybDriver";
+    connection_url = "${MUREX_JDBC_URL}";
+    username = "${MUREX_USER}";
+    password = "${MUREX_PASSWORD}";
+
+    /* Connection pooling */
+    min_connections = 1;
+    max_connections = 8;
+    connection_timeout = 120;
+    idle_timeout = 300;
+
+    /* Session parameters */
+    session_parameters =
+    begin
+        "SET DATEFORMAT ymd";
+        "SET LANGUAGE us_english";
+        "USE MXDM";
+    end;
+
+    /* Read settings */
+    fetch_size = 5000;
+    max_parallelism = 4;
+
+    /* Retry configuration */
+    retry_count = 3;
+    retry_interval = 15;
+
+    /* Sybase-specific */
+    text_size = 2147483647;
+    packet_size = 16384;
+end;

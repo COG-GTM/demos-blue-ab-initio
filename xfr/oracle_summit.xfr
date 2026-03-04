@@ -1,0 +1,43 @@
+/*============================================================================
+  Transfer File: oracle_summit.xfr
+  JIRA: GMRD-220
+  Author: GMRD Data Engineering
+  Description: Ab Initio database transfer definition for Summit FT (Finastra)
+               Oracle database. Used by extraction graphs to read trade and
+               position data from the Summit system.
+============================================================================*/
+
+database "oracle_summit" =
+begin
+    database_type = "oracle";
+    driver_class = "oracle.jdbc.OracleDriver";
+    connection_url = "${SUMMIT_JDBC_URL}";
+    username = "${SUMMIT_USER}";
+    password = "${SUMMIT_PASSWORD}";
+
+    /* Connection pooling */
+    min_connections = 1;
+    max_connections = 8;
+    connection_timeout = 120;
+    idle_timeout = 300;
+
+    /* Session parameters */
+    session_parameters =
+    begin
+        "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD'";
+        "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF6'";
+        "ALTER SESSION SET CURRENT_SCHEMA = SUMMIT";
+    end;
+
+    /* Read settings */
+    fetch_size = 10000;
+    max_parallelism = 4;
+
+    /* Retry configuration */
+    retry_count = 3;
+    retry_interval = 15;
+    retry_on_errors = "ORA-03113,ORA-03114,ORA-12541";
+
+    /* Oracle-specific */
+    prefetch_rows = 10000;
+end;

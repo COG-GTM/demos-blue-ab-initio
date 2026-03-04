@@ -1,0 +1,46 @@
+#=============================================================================
+# Parameter Set: gmrd_daily.pset (UAT)
+# JIRA: GMRD-212
+# Description: UAT environment parameter set for the daily EOD batch.
+#=============================================================================
+
+ENV=uat
+AB_SANDBOX=/data/gmrd/uat
+
+TD_JDBC_URL=jdbc:teradata://TDUAT01/DATABASE=GMRD_CORE_DB,DBS_PORT=1025,CHARSET=UTF8,TMODE=ANSI
+TD_USER=${AB_TD_UAT_USER}
+TD_PASSWORD=${AB_TD_UAT_PASSWORD}
+
+CALYPSO_JDBC_URL=jdbc:oracle:thin:@calypso-uat.internal:1521/CALUAT
+CALYPSO_USER=${AB_CALYPSO_UAT_USER}
+CALYPSO_PASSWORD=${AB_CALYPSO_UAT_PASSWORD}
+
+MUREX_JDBC_URL=jdbc:sybase:Tds:murex-uat.internal:5000/MXDM
+MUREX_USER=${AB_MUREX_UAT_USER}
+MUREX_PASSWORD=${AB_MUREX_UAT_PASSWORD}
+
+SUMMIT_JDBC_URL=jdbc:oracle:thin:@summit-uat.internal:1521/SMTUAT
+SUMMIT_USER=${AB_SUMMIT_UAT_USER}
+SUMMIT_PASSWORD=${AB_SUMMIT_UAT_PASSWORD}
+
+BBG_FEED_DIR=/data/feeds/bloomberg/uat
+RTR_FEED_DIR=/data/feeds/reuters/uat
+
+OUTPUT_DIR=${AB_SANDBOX}/data/extract
+EXTRACT_DIR=${AB_SANDBOX}/data/extract
+INPUT_DIR=${AB_SANDBOX}/data/extract
+LOOKUP_DIR=${AB_SANDBOX}/data/extract
+REJECT_DIR=${AB_SANDBOX}/data/reject
+ARCHIVE_DIR=${AB_SANDBOX}/data/archive
+HIERARCHY_FILE=${AB_SANDBOX}/data/reference/corporate_hierarchy.dat
+
+MAX_PARALLELISM=4
+MAX_SESSIONS=12
+FETCH_SIZE=10000
+BATCH_SIZE=50000
+STALE_PRICE_THRESHOLD_DAYS=3
+STALE_THRESHOLD_PCT=0.001
+OUTLIER_THRESHOLD_PCT=0.20
+
+LOG_DIR=${AB_SANDBOX}/logs
+LOG_LEVEL=INFO

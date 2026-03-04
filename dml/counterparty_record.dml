@@ -1,0 +1,82 @@
+/*============================================================================
+  DML: counterparty_record.dml
+  JIRA: GMRD-262
+  Author: GMRD Data Engineering
+  Description: Counterparty record types for golden source resolution and
+               hierarchy building. Maps to GMRD_CORE_DB.CTR_COUNTERPARTIES
+               and GMRD_CORE_DB.CTR_HIERARCHY.
+============================================================================*/
+
+type counterparty_raw_t =
+record
+    string(",") feed_id;
+    string(",") feed_timestamp;
+    string(",") cpty_source_id;
+    string(",") source_system;
+    string(",") cpty_legal_name;
+    string(",") cpty_short_name;
+    string(",") cpty_type;
+    string(",") cpty_lei;
+    string(",") cpty_country;
+    string(",") cpty_sector;
+    string(",") cpty_industry;
+    string(",") cpty_rating_sp;
+    string(",") cpty_rating_moodys;
+    string(",") cpty_rating_fitch;
+    string(",") cpty_internal_rating;
+    string(",") cpty_netting_agreement;
+    string(",") cpty_csa_flag;
+    string(",") cpty_ccp_flag;
+    string("\n") load_timestamp;
+end;
+
+type counterparty_conformed_t =
+record
+    string(",") counterparty_id;
+    string(",") legal_name;
+    string(",") short_name;
+    string(",") counterparty_type;
+    string(",") lei_code;
+    string(",") country_code;
+    string(",") country_name;
+    string(",") region;
+    string(",") sector;
+    string(",") industry_group;
+    string(",") parent_cpty_id;
+    string(",") ultimate_parent_id;
+    string(",") rating_sp;
+    string(",") rating_moodys;
+    string(",") rating_fitch;
+    string(",") internal_rating;
+    decimal(",") pd_1y;
+    decimal(",") lgd_pct;
+    string(",") netting_eligible;
+    string(",") csa_flag;
+    string(",") ccp_member_flag;
+    string(",") is_internal;
+    string(",") regulatory_class;
+    string(",") basel_asset_class;
+    string(",") kyc_status;
+    string(",") kyc_review_date;
+    string(",") status;
+    string(",") valid_from_date;
+    string(",") valid_to_date;
+    string(",") is_current;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;
+
+type counterparty_hierarchy_t =
+record
+    string(",") child_cpty_id;
+    string(",") parent_cpty_id;
+    string(",") ultimate_parent_id;
+    string(",") hierarchy_level;
+    decimal(",") ownership_pct;
+    string(",") relationship_type;
+    string(",") effective_date;
+    string(",") expiry_date;
+    string(",") is_current;
+    string(",") batch_id;
+    string("\n") load_timestamp;
+end;
