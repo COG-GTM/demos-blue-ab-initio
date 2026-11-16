@@ -67,7 +67,7 @@ details pre{background:#0b1220;color:#cbd5e1;padding:12px;border-radius:10px;fon
   synthetic Calypso / Murex / Summit extracts generated from the repo's DML layouts.</p>
   <div class="badges"><span class="badge warn">SYNTHETIC DATA</span><span class="badge">PySpark 3.5.3 · local[4]</span>
   <span class="badge">Python 3.12.13 · Java 21.0.12.1</span><span class="badge">business date 2026-11-13 · batch 20261113001</span>
-  <span class="badge">run 2026-11-16T12:41:06+00:00</span></div>
+  <span class="badge">run 2026-11-16T12:43:45+00:00</span></div>
 </header>
 <main>
   <div class="kpis">
@@ -76,7 +76,7 @@ details pre{background:#0b1220;color:#cbd5e1;padding:12px;border-radius:10px;fon
     <div class="kpi"><b>100</b><span>synthetic trades enriched &amp; staged</span></div>
     <div class="kpi good"><b>13/13</b><span>reconciliation checks passed</span></div>
     <div class="kpi good"><b>4,000</b><span>cells identical to independent Python rules</span></div>
-    <div class="kpi"><b>6.3s</b><span>PySpark wall time (both graphs, local)</span></div>
+    <div class="kpi"><b>6.1s</b><span>PySpark wall time (both graphs, local)</span></div>
   </div>
 
   <section>
@@ -386,7 +386,7 @@ AdaptiveSparkPlan isFinalPlan=false
       :  +- Project [smt_deal_no AS trade_id, smt_version_no AS trade_version, SUMMIT AS source_system, smt_deal_no AS source_trade_ref, 2026-11-13 AS business_date, s…
       :     +- FileScan csv [smt_deal_no,smt_version_no,smt_deal_status,smt_deal_type,smt_product_class,smt_product_group,smt_book,smt_desk,smt_entity,smt_cpty_id,smt_…
       +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, true]),false), 
-         +- Project [base_ccy AS _lk_ccy, cast(trim(spot_rate, None) as decimal(18,8)) AS _lk_rate]
+         +- Project [base_ccy AS _lk_ccy, cast(trim(spot_rate, None) as decimal(16,8)) AS _lk_rate]
             +- Filter isnotnull(base_ccy)
                +- FileScan csv [base_ccy,spot_rate] Batched: false, DataFilters: [isnotnull(base_ccy)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/ub…
 </pre></details>
