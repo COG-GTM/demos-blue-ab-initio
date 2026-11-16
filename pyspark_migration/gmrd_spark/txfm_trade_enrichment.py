@@ -21,7 +21,7 @@ from .lineage import Lineage
 
 GRAPH = "txfm_trade_enrichment"
 TRADE_REF = "dml/trade_record.dml::trade_record_t"
-FX_RATE = DecimalType(18, 8)
+FX_RATE = DecimalType(16, 8)  # amount(28,8) * rate keeps 8+ dp only if rate has <= 8 integer digits
 
 ASSET_CLASS_RULES = [
     ("IR", ["IRS", "FRA", "SWAP", "SWAPTION", "CAP", "FLOOR"]),
