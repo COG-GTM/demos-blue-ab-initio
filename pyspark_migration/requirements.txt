@@ -1,0 +1,4 @@
+pyspark==3.5.3
+pytest>=7
+# optional, only for scripts/screenshot_report.py (then: python -m playwright install chromium)
+playwright>=1.40
