@@ -471,7 +471,8 @@ def build(results_path: Path, out_path: Path) -> Path:
     n_components = sum(len(g.components) for g in graphs.values())
     n_stub = len({(s["graph"], s["ab_component"]) for s in res["steps"] if s["status"] == "stub"})
     passed = sum(c["status"] == "PASS" for c in res["checks"])
-    cells = next(c for c in res["checks"] if c["name"].startswith("row-level"))["detail"].split()[0]
+    row_check = next(c for c in res["checks"] if c["name"].startswith("row-level"))
+    cells = int(row_check["detail"].split()[0]) - int(row_check["actual"])
     trades = next(s for s in res["steps"] if s["name"] == "fx_lookup")["rows"]
     secs = sum(res["timings_sec"].values())
 
