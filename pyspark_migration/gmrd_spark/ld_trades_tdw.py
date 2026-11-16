@@ -76,7 +76,7 @@ def load_staging_table(spark: SparkSession, df: DataFrame, table_dir: Path, busi
     new_rows = staging_columns(df, batch_id)
     if table_dir.exists():
         deleted = (F.col("TRADE_DATE") == F.to_date(F.lit(business_date))) & (F.col("BATCH_ID") == int(batch_id))
-        kept = spark.read.parquet(str(table_dir)).filter(~deleted)
+        kept = spark.read.parquet(str(table_dir)).filter(~F.coalesce(deleted, F.lit(False)))
         combined = kept.unionByName(new_rows)
     else:
         combined = new_rows
