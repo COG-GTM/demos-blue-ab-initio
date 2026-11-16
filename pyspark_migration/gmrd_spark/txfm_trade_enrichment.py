@@ -161,10 +161,24 @@ def fx_lookup(trades: DataFrame, fx_rates: DataFrame) -> DataFrame:
     return j.select(*field_names(TRADE_REF))
 
 
+def plain_decimal(c: Column, scale: int) -> Column:
+    """Decimal -> plain digits ("0.00000000"); Spark's cast(string) gives "0E-8" for small values."""
+    whole = F.floor(F.abs(c))
+    frac = ((F.abs(c) - whole) * F.lit(10 ** scale)).cast(DecimalType(38, 0)).cast("string")
+    sign = F.when(c < 0, F.lit("-")).otherwise(F.lit(""))
+    return F.concat(sign, whole.cast(DecimalType(38, 0)).cast("string"), F.lit("."), F.lpad(frac, scale, "0"))
+
+
 def write_delimited(df: DataFrame, target: Path) -> Path:
     """Write a single pipe-delimited file with header (Ab Initio output_file)."""
     tmp = target.with_suffix(".spark_tmp")
     shutil.rmtree(tmp, ignore_errors=True)
+    # Spark renders small-scale decimals like 0E-8; write plain digits as Ab Initio does.
+    df = df.select([
+        plain_decimal(F.col(f.name), f.dataType.scale).alias(f.name)
+        if isinstance(f.dataType, DecimalType) else F.col(f.name)
+        for f in df.schema.fields
+    ])
     df.coalesce(1).write.csv(str(tmp), sep="|", header=True, mode="overwrite", emptyValue="")
     part = next(tmp.glob("part-*.csv"))
     target.parent.mkdir(parents=True, exist_ok=True)

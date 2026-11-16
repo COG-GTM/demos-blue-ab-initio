@@ -64,7 +64,7 @@ def _trade_core(rng: random.Random, bdate: date, i: int) -> dict:
         "notional": _padded(rng, notional),
         "ccy": ccy,
         "settle": _padded(rng, notional * rng.choice([0, 0.01, 1])),
-        "price": f"{rng.uniform(0.5, 150):.6f}",
+        "price": f"{rng.uniform(0.5, 150):.8f}",
         "mv": _padded(rng, mv),
         "underlying": rng.choice(["GBP-SONIA", "USD-SOFR", "EURUSD", "FTSE100", "ITRAXX-MAIN", ""]),
         "strike": f"{rng.uniform(0.5, 5):.4f}" if is_opt else "",

@@ -17,7 +17,7 @@ _TYPE_RE = re.compile(r"type\s+(\w+)\s*=\s*record(.*?)end\s*;", re.S)
 _FIELD_RE = re.compile(r"^\s*(string|decimal|integer|date)\s*\(([^)]*)\)\s+(\w+)\s*;", re.M)
 _COMMENT_RE = re.compile(r"/\*.*?\*/", re.S)
 
-DECIMAL_AMOUNT = DecimalType(25, 6)
+DECIMAL_AMOUNT = DecimalType(28, 8)
 
 
 @dataclass(frozen=True)

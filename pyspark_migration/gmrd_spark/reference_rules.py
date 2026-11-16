@@ -10,7 +10,7 @@ import csv
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
-SIX_DP = Decimal("0.000001")
+DECIMAL_DP = Decimal("0.00000001")
 ASSET_CLASS = {
     **dict.fromkeys(["IRS", "FRA", "SWAP", "SWAPTION", "CAP", "FLOOR"], "IR"),
     **dict.fromkeys(["FX_SPOT", "FX_FWD", "FX_SWAP", "FX_OPTION"], "FX"),
@@ -22,7 +22,7 @@ ASSET_CLASS = {
 
 def decimal_strip(value: str | None) -> Decimal | None:
     value = (value or "").strip()
-    return Decimal(value).quantize(SIX_DP, ROUND_HALF_UP) if value else None
+    return Decimal(value).quantize(DECIMAL_DP, ROUND_HALF_UP) if value else None
 
 
 def _read(path: Path) -> list[dict]:
@@ -90,7 +90,7 @@ def _summit(r: dict, bd: str, batch: str) -> dict:
 def _to_gbp(amount: Decimal | None, ccy: str, rate: Decimal | None) -> Decimal | None:
     if ccy == "GBP" or rate is None or amount is None:
         return amount
-    return (amount * rate).quantize(SIX_DP, ROUND_HALF_UP)
+    return (amount * rate).quantize(DECIMAL_DP, ROUND_HALF_UP)
 
 
 def enrich(extract_dir: Path, lookup_dir: Path, business_date: str, batch_id: str) -> list[dict]:
