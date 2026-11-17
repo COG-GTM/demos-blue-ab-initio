@@ -6,6 +6,10 @@ Checked-in graph count: 8. Script-referenced absent extract graph count: 6.
 Static reconstruction of invocation order, not proof the absent extracts can run.
 Graph nodes below are exact script graph names; validation is a non-graph node.
 
+These are **execution-order DAGs**, not proofs of every logical data dependency. Preserve the legacy daily SERIAL load order market → counterparty → trades → positions until an owner approves a runtime change (scripts/run_daily_batch.ksh:163; scripts/run_daily_batch.ksh:166; scripts/run_daily_batch.ksh:169; scripts/run_daily_batch.ksh:172). Implementation order instead follows the approved counterparty/SCD2 pilot (s3.1/s3.2), then the remaining market/trade/position waves. Trade and position implementation may proceed in parallel once shared business-date/as-of/batch ID, FX/price and file serialization contracts are stable.
+
+The visible position graph reads positions, FX and raw prices, not trade output; trade enrichment reads trade extracts and FX (mp/transform/txfm_position_aggregation.mp:25; mp/transform/txfm_position_aggregation.mp:68; mp/transform/txfm_position_aggregation.mp:94; mp/transform/txfm_trade_enrichment.mp:27; mp/transform/txfm_trade_enrichment.mp:210). Procedure bodies are missing, so any logical trade prerequisite for position implementation, and procedure-internal dependencies suggested by scheduler comments, remain **unproven hypotheses** (mp/load/ld_trades_tdw.mp:144; mp/load/ld_positions_tdw.mp:64). Operational serial order alone does not prove them.
+
 ## Daily
 
 ```mermaid
@@ -80,7 +84,7 @@ Azure validates DML, compiles present graphs with DEV pset and lints SQL with Te
 | Claim | Executable observation | Evidence |
 |---|---|---|
 | Repository contains all extracts | Six listed extracts are absent; only eight transform/load graphs exist | README.md:3; README.md:49; scripts/run_daily_batch.ksh:101 |
-| Same-level graphs may run in parallel | Position then market extract are serial; trade then position transform serial; all four loads serial, not just their minimal data prerequisites | docs/graph_dependency.md:5; docs/graph_dependency.md:16; docs/graph_dependency.md:24; docs/graph_dependency.md:32; scripts/run_daily_batch.ksh:124; scripts/run_daily_batch.ksh:149; scripts/run_daily_batch.ksh:163 |
+| Same-level graphs may run in parallel | Position then market extract are serial; trade then position transform serial; all four loads serial. This proves scheduling order, not minimal logical prerequisites | docs/graph_dependency.md:5; docs/graph_dependency.md:16; docs/graph_dependency.md:24; docs/graph_dependency.md:32; scripts/run_daily_batch.ksh:124; scripts/run_daily_batch.ksh:149; scripts/run_daily_batch.ksh:163 |
 | Intraday position revaluation | Only market extract/validate/load run; no position graph or post-load validation | scripts/run_intraday_refresh.ksh:6; scripts/run_intraday_refresh.ksh:43 |
 | Counterparty lookup enrichment | Reader has no consumer; generated counterparty_conformed_DATE.dat does not create counterparty_master.dat | README.md:64; mp/transform/txfm_trade_enrichment.mp:59; mp/transform/txfm_trade_enrichment.mp:210; mp/transform/txfm_counterparty_hierarchy.mp:128 |
 | Greek calculations / curve interpolation | Position rollup sums supplied Greeks; price validator joins prices only, no interpolation | README.md:65; README.md:67; mp/transform/txfm_position_aggregation.mp:109; mp/transform/txfm_market_data_validation.mp:46 |
