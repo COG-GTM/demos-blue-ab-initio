@@ -100,4 +100,29 @@ No sample source/expected-output data, tests, DDL exports or Control>Center mani
 
 ## Related warehouse repo search
 
-README.md:110 references `demos-blue-terradata` (spelling retained). **Placeholder — lead is checking connected repositories separately and will fill this section.** No warehouse-repo contents were inspected; no ownership or missing asset is considered resolved by that reference.
+README.md:110 references `demos-blue-terradata` (spelling retained). The lead performed a read-only connected-repository search using `git_list_repos`: filters `terradata` and `gmrd` returned no repositories; `demos-blue` returned only this repository. Filter `teradata` returned eight connected COG-GTM repositories, shallow-cloned read-only under `~/ro_search` at these HEADs:
+
+| Connected repository | Inspected HEAD |
+|---|---|
+| COG-GTM/SC.TeradataExportScripts | `f8a5b64` |
+| COG-GTM/Teradata-Utilities | `645eedd` |
+| COG-GTM/Teradata-Utilities-Script | `7f62aa2` |
+| COG-GTM/brc-teradata-migration-demo | `f6b02f7` |
+| COG-GTM/edw-teradata-batch | `1cedf7d` |
+| COG-GTM/gdw-teradata-batch | `6d377d5` |
+| COG-GTM/teradata-migration | `822d888` |
+| COG-GTM/teradata-to-bigquery | `2fcba93` |
+
+The lead's recursive filename-only search across all eight clones returned zero matches for this case-sensitive extended regular expression:
+
+```text
+SP_TRADE_LIFECYCLE|SP_DAILY_POSITION_SNAPSHOT|GMRD|demos-blue|GMRD_CORE_DB|GMRD_STG_DB|GMRD_RISK_DB|TRADE_LIFECYCLE|POSITION_SNAPSHOT|Calypso|Murex|Summit
+```
+
+This handoff independently verified all eight clone HEADs above and repeated the content search with ripgrep, including hidden/ignored working-tree files and excluding Git metadata. The pattern was expanded with the audit macro and every concrete table name in this register:
+
+```text
+MCR_LOAD_AUDIT|AUD_BATCH_CONTROL|AUD_DATA_QUALITY_LOG|AUD_RECONCILIATION|CTR_COUNTERPARTIES|CTR_HIERARCHY|MKT_EOD_PRICES|MKT_FX_RATES|MKT_VOL_SURFACES|MKT_YIELD_CURVES|POS_DAILY_POSITIONS|TRD_TRADES|STG_COUNTERPARTY_RAW|STG_MARKET_DATA_RAW|STG_POSITIONS_RAW|STG_TRADES_CALYPSO|STG_TRADES_MUREX|STG_TRADES_SUMMIT
+```
+
+The combined expanded search also returned **zero matching files** (ripgrep exit 1: no matches). These results cover the inspected shallow-clone working trees, not repository history or unconnected repositories. No authoritative warehouse definition was located in the connected repositories. This does **not** prove the warehouse repository does not exist: it could be unconnected, renamed or hosted elsewhere. The owner must grant access to the authoritative repository or provide deployed DDL/procedure/macro exports. No missing asset or ownership question is closed by this search.
